@@ -213,11 +213,14 @@ open class MessageLabel: UILabel {
             return
         }
         
-        let style = paragraphStyle(for: newText)
         let range = NSRange(location: 0, length: newText.length)
-        
         let mutableText = NSMutableAttributedString(attributedString: newText)
-        mutableText.addAttribute(.paragraphStyle, value: style, range: range)
+        (mutableText.string as NSString).enumerateSubstrings(in: range, options: .byParagraphs) { (_, paragraphRange, _, _) in
+            let style = mutableText.attribute(.paragraphStyle, at: paragraphRange.location, effectiveRange: nil) as? NSMutableParagraphStyle ?? NSMutableParagraphStyle()
+            style.lineBreakMode = self.lineBreakMode
+            style.alignment = self.textAlignment
+            mutableText.addAttribute(.paragraphStyle, value: style, range: paragraphRange)
+        }
         
         if shouldParse {
             rangesForDetectors.removeAll()
@@ -239,19 +242,6 @@ open class MessageLabel: UILabel {
 
         if !isConfiguring { setNeedsDisplay() }
 
-    }
-    
-    private func paragraphStyle(for text: NSAttributedString) -> NSParagraphStyle {
-        guard text.length > 0 else { return NSParagraphStyle() }
-        
-        var range = NSRange(location: 0, length: text.length)
-        let existingStyle = text.attribute(.paragraphStyle, at: 0, effectiveRange: &range) as? NSMutableParagraphStyle
-        let style = existingStyle ?? NSMutableParagraphStyle()
-        
-        style.lineBreakMode = lineBreakMode
-        style.alignment = textAlignment
-        
-        return style
     }
 
     private func updateAttributes(for detectors: [DetectorType]) {

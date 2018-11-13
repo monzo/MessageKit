@@ -55,18 +55,6 @@ class MessagesViewControllerTests: XCTestCase {
 
     // MARK: - Test
 
-    func testMessageCollectionViewLayout_isMessageCollectionViewLayout() {
-        XCTAssertNotNil(sut.messagesCollectionView.collectionViewLayout)
-        XCTAssertTrue(sut.messagesCollectionView.collectionViewLayout is MessagesCollectionViewFlowLayout)
-    }
-
-    func testMessageCollectionView_hasMessageCollectionFlowLayoutAfterViewDidLoad() {
-        let layout = sut.messagesCollectionView.collectionViewLayout
-
-        XCTAssertNotNil(layout)
-        XCTAssertTrue(layout is MessagesCollectionViewFlowLayout)
-    }
-
     func testViewDidLoad_shouldSetDelegateAndDataSourceToTheSameObject() {
         XCTAssertEqual(sut.messagesCollectionView.delegate as? MessagesViewController,
                        sut.messagesCollectionView.dataSource as? MessagesViewController)
@@ -122,7 +110,7 @@ class MessagesViewControllerTests: XCTestCase {
     func testCellForItemWithAttributedTextData_returnsTextMessageCell() {
         let messagesDataSource = MockMessagesDataSource()
         sut.messagesCollectionView.messagesDataSource = messagesDataSource
-        let attributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+        let attributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
         let attriutedString = NSAttributedString(string: "Test", attributes: attributes)
         messagesDataSource.messages.append(MockMessage(attributedText: attriutedString,
                                                        sender: messagesDataSource.senders[0],

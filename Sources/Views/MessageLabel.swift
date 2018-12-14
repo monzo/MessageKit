@@ -180,7 +180,7 @@ open class MessageLabel: UILabel {
 
     open override func drawText(in rect: CGRect) {
 
-        let insetRect = UIEdgeInsetsInsetRect(rect, textInsets)
+        let insetRect = rect.inset(by: textInsets)
         textContainer.size = CGSize(width: insetRect.width, height: insetRect.height)
 
         let origin = insetRect.origin
